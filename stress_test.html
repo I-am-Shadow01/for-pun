@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STRESSFIRE // SUPABASE</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#050810;--panel:#0a0f1e;--border:#1a2540;
+    --green:#00ff88;--red:#ff2255;--yellow:#ffcc00;
+    --cyan:#00e5ff;--purple:#b060ff;--dim:#3a4a6a;--text:#c8d8f0;
+    --glow-g:0 0 8px #00ff8866,0 0 20px #00ff8822;
+    --glow-c:0 0 8px #00e5ff66,0 0 20px #00e5ff22;
+    --glow-r:0 0 8px #ff225566,0 0 20px #ff225522;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monospace;min-height:100vh;overflow-x:hidden}
+  body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.08) 2px,rgba(0,0,0,.08) 4px);pointer-events:none;z-index:999}
+  body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+  .container{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:24px 20px}
+  header{text-align:center;margin-bottom:26px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+  .logo{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(26px,5vw,44px);letter-spacing:6px;color:var(--cyan);text-shadow:var(--glow-c);animation:pulse 3s ease-in-out infinite}
+  .logo span{color:var(--green);text-shadow:var(--glow-g)}
+  .subtitle{font-size:10px;letter-spacing:4px;color:var(--dim);margin-top:5px}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.85}}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+  @keyframes fadein{from{opacity:0;transform:translateX(-4px)}to{opacity:1}}
+
+  .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+  .stat{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:12px;text-align:center}
+  .stat-val{font-family:'Orbitron',monospace;font-size:22px;font-weight:700;line-height:1;margin-bottom:4px}
+  .stat-label{font-size:9px;letter-spacing:2px;color:var(--dim);text-transform:uppercase}
+  .s-success .stat-val{color:var(--green);text-shadow:var(--glow-g)}
+  .s-fail    .stat-val{color:var(--red);text-shadow:var(--glow-r)}
+  .s-rps     .stat-val{color:var(--cyan);text-shadow:var(--glow-c)}
+  .s-lat     .stat-val{color:var(--yellow)}
+
+  .progress-wrap{background:#070c1a;border:1px solid var(--border);border-radius:3px;height:6px;margin-bottom:12px;overflow:hidden}
+  .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--green));box-shadow:var(--glow-c);transition:width .3s ease}
+
+  .grid{display:grid;grid-template-columns:320px 1fr;gap:14px;align-items:start}
+  @media(max-width:768px){.grid{grid-template-columns:1fr}}
+
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+  .panel-header{background:var(--border);padding:8px 14px;font-family:'Orbitron',monospace;font-size:10px;letter-spacing:3px;color:var(--cyan);display:flex;align-items:center;gap:8px}
+  .panel-header::before{content:'';width:6px;height:6px;background:var(--cyan);border-radius:50%;box-shadow:var(--glow-c);animation:blink 1.5s ease-in-out infinite}
+  .panel-body{padding:14px}
+
+  .field{margin-bottom:11px}
+  label{display:block;font-size:10px;letter-spacing:2px;color:var(--dim);margin-bottom:4px;text-transform:uppercase}
+  input[type="number"],input[type="text"],input[type="password"],textarea{
+    width:100%;background:#070c1a;border:1px solid var(--border);border-radius:3px;
+    color:var(--green);font-family:'Share Tech Mono',monospace;font-size:12px;padding:7px 10px;outline:none;
+    transition:border-color .2s,box-shadow .2s
+  }
+  input:focus,textarea:focus{border-color:var(--cyan);box-shadow:var(--glow-c)}
+  textarea{resize:vertical;min-height:50px;font-size:10px;color:var(--dim)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+  .auth-box{border:1px solid #1a3550;border-radius:4px;padding:12px;margin-bottom:12px;background:#060d1a}
+  .auth-title{font-size:10px;letter-spacing:2px;color:var(--cyan);margin-bottom:10px;text-transform:uppercase}
+  .auth-status{margin-top:8px;font-size:10px;min-height:14px}
+  .auth-status.ok{color:var(--green)}
+  .auth-status.err{color:var(--red)}
+  .auth-status.inf{color:var(--cyan)}
+
+  .tok-badge{font-size:9px;margin-left:8px;padding:2px 6px;border-radius:2px;vertical-align:middle}
+  .tok-badge.ok{background:#003322;color:var(--green)}
+  .tok-badge.exp{background:#330011;color:var(--red)}
+  .tok-badge.nun{background:#1a2540;color:var(--dim)}
+
+  .btn{width:100%;padding:10px;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:3px;border:none;border-radius:3px;cursor:pointer;transition:all .15s}
+  .btn-login{background:#00e5ff18;color:var(--cyan);border:1px solid #00e5ff44;font-size:10px;padding:8px}
+  .btn-login:hover:not(:disabled){background:#00e5ff28;box-shadow:var(--glow-c)}
+  .btn-login:disabled{opacity:.4;cursor:not-allowed}
+  .btn-start{background:var(--green);color:#000;margin-top:4px}
+  .btn-start:hover:not(:disabled){box-shadow:0 0 20px #00ff8888;transform:translateY(-1px)}
+  .btn-start:disabled{background:#1a3a2a;color:#2a5a4a;cursor:not-allowed}
+  .btn-stop{background:var(--red);color:#fff;margin-top:6px;display:none}
+  .btn-stop:hover{box-shadow:0 0 20px #ff225588}
+  .btn-stop.visible{display:block}
+  .btn-clear{background:transparent;color:var(--dim);border:1px solid var(--border);margin-top:6px;font-size:10px}
+  .btn-clear:hover{border-color:var(--dim);color:var(--text)}
+
+  .log-wrap{background:#020508;border:1px solid var(--border);border-radius:3px;height:430px;overflow-y:auto;padding:10px;font-size:11.5px;line-height:1.7;scroll-behavior:smooth}
+  .log-wrap::-webkit-scrollbar{width:4px}
+  .log-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+  .log-line{display:flex;gap:8px;animation:fadein .1s ease}
+  .log-ok   .log-status{color:var(--green)}
+  .log-fail .log-status{color:var(--red)}
+  .log-info .log-status{color:var(--cyan)}
+  .log-done .log-status{color:var(--yellow)}
+  .log-warn .log-status{color:var(--yellow)}
+  .log-time{color:var(--dim);min-width:60px}
+  .log-ms{color:var(--purple);min-width:52px;text-align:right}
+  .log-content{color:var(--text);opacity:.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+
+  .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--dim);margin-right:6px;vertical-align:middle}
+  .status-dot.running{background:var(--green);box-shadow:var(--glow-g);animation:blink .6s ease-in-out infinite}
+  .status-dot.done{background:var(--cyan);box-shadow:var(--glow-c)}
+  .status-dot.error{background:var(--red);box-shadow:var(--glow-r)}
+  .status-text{font-size:11px;color:var(--dim);letter-spacing:1px}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo">STRESS<span>FIRE</span></div>
+    <div class="subtitle">SUPABASE REALTIME LOAD TESTER · v3.0 · AUTO-AUTH</div>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat s-success"><div class="stat-val" id="s-ok">0</div><div class="stat-label">Success</div></div>
+    <div class="stat s-fail"><div class="stat-val" id="s-fail">0</div><div class="stat-label">Failed</div></div>
+    <div class="stat s-rps"><div class="stat-val" id="s-rps">0.0</div><div class="stat-label">req/sec</div></div>
+    <div class="stat s-lat"><div class="stat-val" id="s-lat">—</div><div class="stat-label">avg ms</div></div>
+  </div>
+
+  <div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+
+  <div class="grid">
+    <div>
+      <div class="panel">
+        <div class="panel-header">CONFIG</div>
+        <div class="panel-body">
+
+          <div class="auth-box">
+            <div class="auth-title">🔑 SESSION</div>
+            <div class="field" style="margin-bottom:8px">
+              <label>Refresh Token <span style="color:#555;font-size:9px">(LocalStorage → sb-...-auth-token → refresh_token)</span></label>
+              <textarea id="cfg-refresh" style="min-height:44px">bk65nkzwkiwh</textarea>
+              <button onclick="useRefreshToken()" style="margin-top:5px;width:100%;padding:6px;background:#1a2540;border:1px solid #2a3a60;border-radius:3px;color:var(--cyan);font-family:Share Tech Mono,monospace;font-size:10px;cursor:pointer;letter-spacing:1px">
+                🔄 REFRESH TOKEN NOW
+              </button>
+            </div>
+            <div class="auth-status inf" id="auth-status">— ยังไม่ได้ login</div>
+          </div>
+
+          <div class="field">
+            <label>Supabase REST URL</label>
+            <input type="text" id="cfg-url" value="https://magnudsyqmyqrxhqbcyx.supabase.co/rest/v1/messages">
+          </div>
+
+          <div class="field">
+            <label>API Key (anon)</label>
+            <textarea id="cfg-apikey">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1hZ251ZHN5cW15cXJ4aHFiY3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5MjIzMzYsImV4cCI6MjA2ODQ5ODMzNn0.2ubtn4xxdr8r--rTkUqNY4SsSDJyHusudhGCYzsX-Fs</textarea>
+          </div>
+
+          <div class="field">
+            <label>JWT Token <span class="tok-badge nun" id="tok-badge">NO TOKEN</span></label>
+            <textarea id="cfg-jwt" placeholder="Login ด้านบน หรือวาง token เอง">eyJhbGciOiJIUzI1NiIsImtpZCI6Imt6dkUwOGZTRmlZd09tSjgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL21hZ251ZHN5cW15cXJ4aHFiY3l4LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJiNjQxNDc4My1mNmI5LTQ4ODctYjU1OS0wMzM0OWQ3MWI1ODciLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzcyNzQxMTE5LCJpYXQiOjE3NzI3Mzc1MTksImVtYWlsIjoiczI1MjI0QHN0cmVldHJhdC5hYy50aCIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJzMjUyMjRAc3RyZWV0cmF0LmFjLnRoIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBob25lX3ZlcmlmaWVkIjpmYWxzZSwic3ViIjoiYjY0MTQ3ODMtZjZiOS00ODg3LWI1NTktMDMzNDlkNzFiNTg3IiwidXNlcm5hbWUiOiIxMTExMTEifSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc3MjczNzUxOX1dLCJzZXNzaW9uX2lkIjoiNjUwYjczMGUtMjIxMy00YTYyLTlkYzMtMWY3OGRmZTUxOGVlIiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.N5YZa1tT2MPbuVD4c2K5q8tnKk6oZQq9H4W5FrqyF5U</textarea>
+          </div>
+
+          <div class="field">
+            <label>Refresh Token <span style="color:#555;font-size:9px">(จาก Local Storage ของ app)</span></label>
+            <textarea id="cfg-refresh" style="min-height:44px">bk65nkzwkiwh</textarea>
+            <button onclick="useRefreshToken()" style="margin-top:5px;width:100%;padding:6px;background:#1a2540;border:1px solid #2a3a60;border-radius:3px;color:var(--cyan);font-family:Share Tech Mono,monospace;font-size:10px;cursor:pointer;letter-spacing:1px">
+              🔄 ใช้ Refresh Token (ไม่ต้อง captcha)
+            </button>
+          </div>
+
+          <div class="field">
+            <label>User ID</label>
+            <input type="text" id="cfg-uid" value="b6414783-f6b9-4887-b559-03349d71b587">
+          </div>
+
+          <div class="row2">
+            <div class="field"><label>Total Msgs</label><input type="number" id="cfg-total" value="100" min="1" max="9999"></div>
+            <div class="field"><label>Concurrency</label><input type="number" id="cfg-concur" value="10" min="1" max="50"></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label>Emojis/msg</label><input type="number" id="cfg-emoji" value="50" min="1" max="200"></div>
+            <div class="field"><label>Delay (ms)</label><input type="number" id="cfg-delay" value="50" min="0" max="5000"></div>
+          </div>
+
+          <button class="btn btn-start" id="btn-start" onclick="startTest()">▶ FIRE</button>
+          <button class="btn btn-stop"  id="btn-stop"  onclick="stopTest()">■ STOP</button>
+          <button class="btn btn-clear" onclick="clearLog()">CLEAR LOG</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <div class="panel-header">
+          <span id="status-dot" class="status-dot"></span>
+          <span id="status-text" class="status-text">IDLE — READY TO FIRE</span>
+        </div>
+        <div class="panel-body" style="padding:10px">
+          <div class="log-wrap" id="log"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONTENT ──────────────────────────────────────────────
+const EMOJIS = [
+  "🔥","🚀","💥","✨","😂","🤣","😎","🤖","👾","⚡",
+  "🌊","🌌","🎯","🧠","💡","🛰️","🌀","🌍","🧬","🎮",
+  "🐉","🦄","🍕","🎸","🏆","🎲","🌈","⚔️","🛸","🧨",
+  "🦋","🐋","🦖","🍔","🎭","🏄","🌺","🍄","🎪","🔮",
+  "🧊","🌋","🦅","🐺","🌙","☄️","🎆","🎇","🏔️","🦁",
+  "🐲","🍀","⭐","🌟","💫","🎠","🎡","🎢","🎯","🎳",
+  "🦊","🐯","🦝","🦩","🦚","🦜","🐬","🦈","🐙","🦑"
+];
+const WORDS = ["hello","python","bot","test","spam","realtime","supabase","message","ping","pong","stress","flood","concurrent","async"];
+const SENTS = ["testing realtime latency","concurrent insert benchmark","stress test in progress","สวัสดี database","how fast can supabase go","insert insert insert"];
+
+// ── AUTH STATE ────────────────────────────────────────────
+const auth = { accessToken:null, refreshToken:null, userId:null, expiresAt:null, timer:null };
+
+function getBaseUrl() {
+  const u = document.getElementById('cfg-url').value.trim();
+  const m = u.match(/^(https:\/\/[^/]+)/);
+  return m ? m[1] : '';
+}
+function getApiKey() { return document.getElementById('cfg-apikey').value.trim(); }
+
+// Refresh token อัตโนมัติ
+async function doRefresh() {
+  log('warn','🔄 REFRESH', null, 'refresh token...');
+  try {
+    const r = await fetch(`${getBaseUrl()}/auth/v1/token?grant_type=refresh_token`, {
+      method: 'POST',
+      headers: { 'apikey': getApiKey(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: auth.refreshToken })
+    });
+    const d = await r.json();
+    if (!r.ok) { log('fail','🔄 FAIL', null, d.error_description || r.status); setAuthSt('err','⚠️ Refresh ล้มเหลว — login ใหม่'); return; }
+
+    applyTokens(d);
+    log('info','✅ REFRESHED', null, `token ใหม่ · หมด ${fmtTime(auth.expiresAt)}`);
+    setAuthSt('ok', `✅ Token สด · หมดอายุ ${fmtTime(auth.expiresAt)}`);
+  } catch(e) {
+    log('fail','🔄 ERR', null, e.message);
+  }
+}
+
+function applyTokens(d) {
+  auth.accessToken  = d.access_token;
+  auth.refreshToken = d.refresh_token;
+  auth.userId       = d.user?.id || d.user?.sub;
+  const expiresIn   = d.expires_in || 3600;
+  auth.expiresAt    = Date.now() + expiresIn * 1000;
+
+  document.getElementById('cfg-jwt').value = d.access_token;
+  if (auth.userId) document.getElementById('cfg-uid').value = auth.userId;
+
+  updateBadge();
+  // ตั้ง timer refresh ก่อนหมดอายุ 60 วินาที
+  if (auth.timer) clearTimeout(auth.timer);
+  const delay = Math.max((expiresIn - 60) * 1000, 5000);
+  auth.timer = setTimeout(doRefresh, delay);
+}
+
+// ถ้าได้ 401 ระหว่างรัน → refresh แล้ว retry
+async function fetchAR(url, opts) {
+  let r = await fetch(url, opts);
+  if (r.status === 401 && auth.refreshToken) {
+    await doRefresh();
+    opts.headers['Authorization'] = `Bearer ${auth.accessToken}`;
+    r = await fetch(url, opts);
+  }
+  return r;
+}
+
+function updateBadge() {
+  const b = document.getElementById('tok-badge');
+  if (!auth.accessToken) { b.className='tok-badge nun'; b.textContent='NO TOKEN'; return; }
+  if (Date.now() > auth.expiresAt) { b.className='tok-badge exp'; b.textContent='EXPIRED'; return; }
+  b.className='tok-badge ok';
+  b.textContent=`EXP ${fmtTime(auth.expiresAt)}`;
+}
+setInterval(updateBadge, 15000);
+
+function fmtTime(ms) { return new Date(ms).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
+function setAuthSt(cls, msg) {
+  const el = document.getElementById('auth-status');
+  el.className = `auth-status ${cls}`;
+  el.textContent = msg;
+}
+
+// ── LOG / STATS ───────────────────────────────────────────
+let running=false,stopFlag=false;
+let totalSent=0,totalOk=0,totalFail=0,totalMs=0,minMs=Infinity,maxMs=0,startTime=0;
+
+function ts(){ return new Date().toTimeString().slice(0,8); }
+
+function log(type, status, ms, content) {
+  const el = document.getElementById('log');
+  const d = document.createElement('div');
+  d.className = `log-line log-${type}`;
+  d.innerHTML = `<span class="log-time">${ts()}</span><span class="log-status">${status}</span><span class="log-ms">${ms!==null?ms.toFixed(0)+'ms':'—'}</span><span class="log-content">${content}</span>`;
+  el.appendChild(d);
+  el.scrollTop = el.scrollHeight;
+}
+
+function clearLog(){ document.getElementById('log').innerHTML=''; }
+
+function updateStats(){
+  document.getElementById('s-ok').textContent   = totalOk;
+  document.getElementById('s-fail').textContent = totalFail;
+  const el = (Date.now()-startTime)/1000;
+  document.getElementById('s-rps').textContent  = el>0?(totalSent/el).toFixed(1):'0.0';
+  const avg = totalSent>0?(totalMs/totalSent).toFixed(0):'—';
+  document.getElementById('s-lat').textContent  = avg==='—'?'—':avg+'ms';
+  const tot = parseInt(document.getElementById('cfg-total').value);
+  document.getElementById('progress').style.width = Math.min(100,(totalSent/tot)*100)+'%';
+}
+
+function setStatus(state, text){
+  document.getElementById('status-dot').className = `status-dot ${state}`;
+  document.getElementById('status-text').textContent = text;
+}
+
+// ── SEND ─────────────────────────────────────────────────
+function pick(arr,k){ const r=[];for(let i=0;i<k;i++)r.push(arr[Math.floor(Math.random()*arr.length)]);return r; }
+
+function rndContent(n){
+  const em = pick(EMOJIS,n).join('');
+  const m  = Math.floor(Math.random()*3);
+  if(m===0) return `${WORDS[Math.floor(Math.random()*WORDS.length)]} ${em}`;
+  if(m===1) return `${SENTS[Math.floor(Math.random()*SENTS.length)]} ${em}`;
+  return `${pick(WORDS,3).join(' ')} ${em}`;
+}
+
+async function sendOne(idx, url, apikey, userId, emojiN, delay) {
+  const content = `[#${String(idx).padStart(3,'0')}] ${rndContent(emojiN)}`;
+  const jwt = auth.accessToken || document.getElementById('cfg-jwt').value.trim();
+  const opts = {
+    method:'POST',
+    headers:{ 'apikey':apikey, 'Authorization':`Bearer ${jwt}`, 'Content-Type':'application/json', 'Prefer':'return=representation' },
+    body: JSON.stringify({ user_id:userId, content, reply_to:null })
+  };
+  const t0 = performance.now();
+  try {
+    const r  = await fetchAR(url, opts);
+    const ms = performance.now()-t0;
+    const ok = r.status===200||r.status===201;
+    totalSent++; totalMs+=ms;
+    minMs=Math.min(minMs,ms); maxMs=Math.max(maxMs,ms);
+    if(ok){ totalOk++;   log('ok',  `✅ ${r.status}`, ms, content.slice(0,55)); }
+    else  { totalFail++; log('fail',`❌ ${r.status}`, ms, content.slice(0,55)); }
+  } catch(e){
+    const ms = performance.now()-t0;
+    totalSent++; totalFail++;
+    log('fail','💀 ERR', ms, String(e).slice(0,55));
+  }
+  updateStats();
+  if(delay>0) await new Promise(res=>setTimeout(res,delay));
+}
+
+// ── START / STOP ──────────────────────────────────────────
+async function startTest(){
+  if(running) return;
+  const jwt = auth.accessToken||document.getElementById('cfg-jwt').value.trim();
+  if(!jwt){ alert('ยังไม่มี JWT Token! กรุณา login ก่อน หรือวาง token ในช่อง JWT'); return; }
+
+  running=true; stopFlag=false;
+  totalSent=0; totalOk=0; totalFail=0; totalMs=0; minMs=Infinity; maxMs=0;
+  startTime=Date.now();
+
+  const url    = document.getElementById('cfg-url').value.trim();
+  const apikey = getApiKey();
+  const userId = document.getElementById('cfg-uid').value.trim();
+  const total  = parseInt(document.getElementById('cfg-total').value);
+  const concur = parseInt(document.getElementById('cfg-concur').value);
+  const emojiN = parseInt(document.getElementById('cfg-emoji').value);
+  const delay  = parseInt(document.getElementById('cfg-delay').value);
+
+  document.getElementById('btn-start').disabled=true;
+  document.getElementById('btn-stop').classList.add('visible');
+  document.getElementById('progress').style.width='0%';
+  setStatus('running',`RUNNING — 0 / ${total}`);
+  log('info','🚀 START',null,`total=${total} concur=${concur} emoji=${emojiN} delay=${delay}ms`);
+
+  let idx=0;
+  async function worker(){
+    while(!stopFlag){
+      if(idx>=total) break;
+      const i=++idx;
+      await sendOne(i, url, apikey, userId, emojiN, delay);
+      setStatus('running',`RUNNING — ${totalSent} / ${total}`);
+    }
+  }
+
+  await Promise.all(new Array(concur).fill(null).map(()=>worker()));
+
+  const elapsed = ((Date.now()-startTime)/1000).toFixed(2);
+  const rps     = (totalSent/parseFloat(elapsed)).toFixed(1);
+  const avg     = totalSent>0?(totalMs/totalSent).toFixed(0):0;
+
+  log('done','🏁 DONE',null,`${totalOk}ok ${totalFail}fail | ${elapsed}s | ${rps}rps | avg${avg}ms min${minMs.toFixed(0)}ms max${maxMs.toFixed(0)}ms`);
+  setStatus(totalFail===0?'done':'error',`DONE — ${totalOk}✅ ${totalFail}❌ | ${elapsed}s | ${rps} req/s`);
+
+  document.getElementById('btn-start').disabled=false;
+  document.getElementById('btn-stop').classList.remove('visible');
+  document.getElementById('progress').style.width='100%';
+  running=false;
+}
+
+function stopTest(){ stopFlag=true; setStatus('error','STOPPING...'); }
+
+// ── USE REFRESH TOKEN DIRECTLY ───────────────────────────
+async function useRefreshToken() {
+  const rt = document.getElementById('cfg-refresh').value.trim();
+  if (!rt) { alert('วาง refresh_token ก่อน'); return; }
+  auth.refreshToken = rt;
+  setAuthSt('inf', '⏳ กำลัง refresh...');
+  await doRefresh();
+}
+
+// auto-load turnstile on startup
+window.addEventListener('load', () => {
+  // auto-apply tokens from prefilled fields
+  const jwt = document.getElementById('cfg-jwt').value.trim();
+  const rt  = document.getElementById('cfg-refresh').value.trim();
+  if (jwt || rt) {
+    auth.refreshToken = rt || null;
+    auth.userId = document.getElementById('cfg-uid').value.trim() || null;
+    if (jwt) {
+      auth.accessToken = jwt;
+      try {
+        const p = JSON.parse(atob(jwt.split('.')[1]));
+        auth.expiresAt = p.exp * 1000;
+        const secsLeft = p.exp - Math.floor(Date.now()/1000);
+        if (secsLeft > 60 && rt) scheduleRefresh(secsLeft);
+        else if (rt) setTimeout(doRefresh, 500); // expired, refresh right away
+      } catch(e) {}
+      updateBadge();
+      setAuthSt('ok', `✅ Token พร้อม · หมดอายุ ${fmtTime(auth.expiresAt)}`);
+    } else if (rt) {
+      setTimeout(doRefresh, 500); // only refresh token, get access token
+    }
+  }
+});
+
+// sync manual jwt field
+document.getElementById('cfg-jwt').addEventListener('input',function(){
+  auth.accessToken = this.value.trim()||null;
+  updateBadge();
+});
+</script>
+</body>
+</html>
