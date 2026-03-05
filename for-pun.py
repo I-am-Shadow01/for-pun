@@ -12,9 +12,9 @@ from datetime import datetime
 
 SUPABASE_URL = "https://magnudsyqmyqrxhqbcyx.supabase.co/rest/v1/messages"
 
-apikey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1hZ251ZHN5cW15cXJ4aHFiY3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5MjIzMzYsImV4cCI6MjA2ODQ5ODMzNn0.2ubtn4xxdr8r--rTkUqNY4SsSDJyHusudhGCYzsX-Fs"
-jwt_token = "eyJhbGciOiJIUzI1NiIsImtpZCI6Imt6dkUwOGZTRmlZd09tSjgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL21hZ251ZHN5cW15cXJ4aHFiY3l4LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJiNjQxNDc4My1mNmI5LTQ4ODctYjU1OS0wMzM0OWQ3MWI1ODciLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzcyNzM0MzcwLCJpYXQiOjE3NzI3MzA3NzAsImVtYWlsIjoiczI1MjI0QHN0cmVldHJhdC5hYy50aCIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJzMjUyMjRAc3RyZWV0cmF0LmFjLnRoIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBob25lX3ZlcmlmaWVkIjpmYWxzZSwic3ViIjoiYjY0MTQ3ODMtZjZiOS00ODg3LWI1NTktMDMzNDlkNzFiNTg3IiwidXNlcm5hbWUiOiIxMTExMTEifSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc3MjczMDc3MH1dLCJzZXNzaW9uX2lkIjoiNWFlYjJiODQtNGQzYS00NTNlLTgzNWUtY2Y0NDI2MWQyYTA4IiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.aWnywQ3rDOA1oPUjCFnSerHybGSZb-3ByISLX_tm9Jo"
-user_id = "b6414783-f6b9-4887-b559-03349d71b587"
+apikey = "" #ไปดักเองดิ
+jwt_token = "" #ไปดักเองดิ
+user_id = "" #ไปดักเองดิ
 
 # =========================
 # STRESS SETTINGS
@@ -175,4 +175,5 @@ if __name__ == "__main__":
             print(f"      {e}")
 
     print("=" * 60)
+
     print(f"✅ DONE at {datetime.now().strftime('%H:%M:%S')}")
