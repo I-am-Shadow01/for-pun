@@ -25,7 +25,8 @@
   .subtitle{font-size:10px;letter-spacing:4px;color:var(--dim);margin-top:5px}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.85}}
   @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-  @keyframes fadein{from{opacity:0;transform:translateX(-4px)}to{opacity:1}}
+  @keyframes fadein{from{opacity:0;transform:translateX(-4px)}to{opacity:1;transform:translateX(0)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
 
   .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
   .stat{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:12px;text-align:center}
@@ -39,7 +40,7 @@
   .progress-wrap{background:#070c1a;border:1px solid var(--border);border-radius:3px;height:6px;margin-bottom:12px;overflow:hidden}
   .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--green));box-shadow:var(--glow-c);transition:width .3s ease}
 
-  .grid{display:grid;grid-template-columns:320px 1fr;gap:14px;align-items:start}
+  .grid{display:grid;grid-template-columns:340px 1fr;gap:14px;align-items:start}
   @media(max-width:768px){.grid{grid-template-columns:1fr}}
 
   .panel{background:var(--panel);border:1px solid var(--border);border-radius:4px;overflow:hidden}
@@ -58,6 +59,23 @@
   textarea{resize:vertical;min-height:50px;font-size:10px;color:var(--dim)}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
+  /* Proxy box */
+  .proxy-box{border:1px solid #1a3550;border-radius:4px;padding:12px;margin-bottom:12px;background:#060d1a}
+  .proxy-title{font-size:10px;letter-spacing:2px;color:var(--purple);margin-bottom:8px;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+  .proxy-status-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .proxy-count{font-family:'Orbitron',monospace;font-size:20px;font-weight:700;color:var(--purple)}
+  .proxy-label{font-size:9px;color:var(--dim);letter-spacing:1px}
+  .proxy-bar-wrap{background:#070c1a;border:1px solid var(--border);border-radius:2px;height:4px;flex:1;min-width:60px;overflow:hidden}
+  .proxy-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--purple),var(--cyan));transition:width .4s}
+  .proxy-info{font-size:10px;color:var(--dim);min-height:13px}
+  .proxy-info.ok{color:var(--green)}
+  .proxy-info.err{color:var(--red)}
+  .proxy-info.loading{color:var(--yellow)}
+  .proxy-mode-toggle{display:flex;gap:6px;margin-bottom:8px}
+  .mode-btn{flex:1;padding:5px;background:#0a0f1e;border:1px solid var(--border);border-radius:3px;color:var(--dim);font-family:Share Tech Mono,monospace;font-size:10px;cursor:pointer;transition:all .15s;letter-spacing:1px}
+  .mode-btn.active{background:#1a0a30;border-color:var(--purple);color:var(--purple)}
+  .mode-btn:hover:not(.active){border-color:var(--dim);color:var(--text)}
+
   .auth-box{border:1px solid #1a3550;border-radius:4px;padding:12px;margin-bottom:12px;background:#060d1a}
   .auth-title{font-size:10px;letter-spacing:2px;color:var(--cyan);margin-bottom:10px;text-transform:uppercase}
   .auth-status{margin-top:8px;font-size:10px;min-height:14px}
@@ -71,9 +89,9 @@
   .tok-badge.nun{background:#1a2540;color:var(--dim)}
 
   .btn{width:100%;padding:10px;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:3px;border:none;border-radius:3px;cursor:pointer;transition:all .15s}
-  .btn-login{background:#00e5ff18;color:var(--cyan);border:1px solid #00e5ff44;font-size:10px;padding:8px}
-  .btn-login:hover:not(:disabled){background:#00e5ff28;box-shadow:var(--glow-c)}
-  .btn-login:disabled{opacity:.4;cursor:not-allowed}
+  .btn-sm{padding:6px 10px;font-size:10px;letter-spacing:2px;background:#1a2540;border:1px solid #2a3a60;color:var(--cyan);font-family:Share Tech Mono,monospace;border-radius:3px;cursor:pointer;transition:all .15s;width:100%}
+  .btn-sm:hover{background:#2a3a60;box-shadow:var(--glow-c)}
+  .btn-sm:disabled{opacity:.35;cursor:not-allowed}
   .btn-start{background:var(--green);color:#000;margin-top:4px}
   .btn-start:hover:not(:disabled){box-shadow:0 0 20px #00ff8888;transform:translateY(-1px)}
   .btn-start:disabled{background:#1a3a2a;color:#2a5a4a;cursor:not-allowed}
@@ -83,7 +101,7 @@
   .btn-clear{background:transparent;color:var(--dim);border:1px solid var(--border);margin-top:6px;font-size:10px}
   .btn-clear:hover{border-color:var(--dim);color:var(--text)}
 
-  .log-wrap{background:#020508;border:1px solid var(--border);border-radius:3px;height:430px;overflow-y:auto;padding:10px;font-size:11.5px;line-height:1.7;scroll-behavior:smooth}
+  .log-wrap{background:#020508;border:1px solid var(--border);border-radius:3px;height:480px;overflow-y:auto;padding:10px;font-size:11.5px;line-height:1.7;scroll-behavior:smooth}
   .log-wrap::-webkit-scrollbar{width:4px}
   .log-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
   .log-line{display:flex;gap:8px;animation:fadein .1s ease}
@@ -92,6 +110,7 @@
   .log-info .log-status{color:var(--cyan)}
   .log-done .log-status{color:var(--yellow)}
   .log-warn .log-status{color:var(--yellow)}
+  .log-proxy .log-status{color:var(--purple)}
   .log-time{color:var(--dim);min-width:60px}
   .log-ms{color:var(--purple);min-width:52px;text-align:right}
   .log-content{color:var(--text);opacity:.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
@@ -101,13 +120,14 @@
   .status-dot.done{background:var(--cyan);box-shadow:var(--glow-c)}
   .status-dot.error{background:var(--red);box-shadow:var(--glow-r)}
   .status-text{font-size:11px;color:var(--dim);letter-spacing:1px}
+  .spin{display:inline-block;animation:spin .8s linear infinite}
 </style>
 </head>
 <body>
 <div class="container">
   <header>
     <div class="logo">STRESS<span>FIRE</span></div>
-    <div class="subtitle">SUPABASE REALTIME LOAD TESTER · v3.0 · AUTO-AUTH</div>
+    <div class="subtitle">SUPABASE REALTIME LOAD TESTER · v4.0 · PROXY ROTATION</div>
   </header>
 
   <div class="stats-bar">
@@ -125,14 +145,43 @@
         <div class="panel-header">CONFIG</div>
         <div class="panel-body">
 
+          <!-- PROXY BOX -->
+          <div class="proxy-box">
+            <div class="proxy-title">🛡️ PROXY ROTATOR</div>
+
+            <div class="proxy-mode-toggle">
+              <button class="mode-btn active" id="mode-proxy" onclick="setMode('proxy')">🌐 PROXY</button>
+              <button class="mode-btn" id="mode-direct" onclick="setMode('direct')">⚡ DIRECT</button>
+            </div>
+
+            <div class="field" style="margin-bottom:8px">
+              <label>Backend URL (Python server)</label>
+              <input type="text" id="cfg-backend" value="http://fi10.bot-hosting.net:20026" placeholder="http://your-host:8000">
+            </div>
+
+            <div class="proxy-status-row">
+              <div>
+                <div class="proxy-count" id="px-count">–</div>
+                <div class="proxy-label">PROXIES READY</div>
+              </div>
+              <div class="proxy-bar-wrap">
+                <div class="proxy-bar" id="px-bar"></div>
+              </div>
+            </div>
+            <div class="proxy-info" id="px-info">ยังไม่ได้เชื่อมต่อ backend</div>
+            <div style="display:flex;gap:6px;margin-top:8px">
+              <button class="btn-sm" id="btn-px-check" onclick="checkProxyStatus()">🔍 CHECK STATUS</button>
+              <button class="btn-sm" id="btn-px-reload" onclick="reloadProxies()" disabled>🔄 RELOAD PROXIES</button>
+            </div>
+          </div>
+
+          <!-- AUTH BOX -->
           <div class="auth-box">
             <div class="auth-title">🔑 SESSION</div>
             <div class="field" style="margin-bottom:8px">
-              <label>Refresh Token <span style="color:#555;font-size:9px">(LocalStorage → sb-...-auth-token → refresh_token)</span></label>
-              <textarea id="cfg-refresh" style="min-height:44px">bk65nkzwkiwh</textarea>
-              <button onclick="useRefreshToken()" style="margin-top:5px;width:100%;padding:6px;background:#1a2540;border:1px solid #2a3a60;border-radius:3px;color:var(--cyan);font-family:Share Tech Mono,monospace;font-size:10px;cursor:pointer;letter-spacing:1px">
-                🔄 REFRESH TOKEN NOW
-              </button>
+              <label>Refresh Token</label>
+              <textarea id="cfg-refresh" style="min-height:36px">bk65nkzwkiwh</textarea>
+              <button class="btn-sm" onclick="useRefreshToken()" style="margin-top:5px">🔄 REFRESH TOKEN NOW</button>
             </div>
             <div class="auth-status inf" id="auth-status">— ยังไม่ได้ login</div>
           </div>
@@ -144,20 +193,12 @@
 
           <div class="field">
             <label>API Key (anon)</label>
-            <textarea id="cfg-apikey">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1hZ251ZHN5cW15cXJ4aHFiY3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5MjIzMzYsImV4cCI6MjA2ODQ5ODMzNn0.2ubtn4xxdr8r--rTkUqNY4SsSDJyHusudhGCYzsX-Fs</textarea>
+            <textarea id="cfg-apikey" style="min-height:40px">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1hZ251ZHN5cW15cXJ4aHFiY3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI5MjIzMzYsImV4cCI6MjA2ODQ5ODMzNn0.2ubtn4xxdr8r--rTkUqNY4SsSDJyHusudhGCYzsX-Fs</textarea>
           </div>
 
           <div class="field">
             <label>JWT Token <span class="tok-badge nun" id="tok-badge">NO TOKEN</span></label>
-            <textarea id="cfg-jwt" placeholder="Login ด้านบน หรือวาง token เอง">eyJhbGciOiJIUzI1NiIsImtpZCI6Imt6dkUwOGZTRmlZd09tSjgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL21hZ251ZHN5cW15cXJ4aHFiY3l4LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJiNjQxNDc4My1mNmI5LTQ4ODctYjU1OS0wMzM0OWQ3MWI1ODciLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzcyNzQxMTE5LCJpYXQiOjE3NzI3Mzc1MTksImVtYWlsIjoiczI1MjI0QHN0cmVldHJhdC5hYy50aCIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJzMjUyMjRAc3RyZWV0cmF0LmFjLnRoIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBob25lX3ZlcmlmaWVkIjpmYWxzZSwic3ViIjoiYjY0MTQ3ODMtZjZiOS00ODg3LWI1NTktMDMzNDlkNzFiNTg3IiwidXNlcm5hbWUiOiIxMTExMTEifSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc3MjczNzUxOX1dLCJzZXNzaW9uX2lkIjoiNjUwYjczMGUtMjIxMy00YTYyLTlkYzMtMWY3OGRmZTUxOGVlIiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.N5YZa1tT2MPbuVD4c2K5q8tnKk6oZQq9H4W5FrqyF5U</textarea>
-          </div>
-
-          <div class="field">
-            <label>Refresh Token <span style="color:#555;font-size:9px">(จาก Local Storage ของ app)</span></label>
-            <textarea id="cfg-refresh" style="min-height:44px">bk65nkzwkiwh</textarea>
-            <button onclick="useRefreshToken()" style="margin-top:5px;width:100%;padding:6px;background:#1a2540;border:1px solid #2a3a60;border-radius:3px;color:var(--cyan);font-family:Share Tech Mono,monospace;font-size:10px;cursor:pointer;letter-spacing:1px">
-              🔄 ใช้ Refresh Token (ไม่ต้อง captcha)
-            </button>
+            <textarea id="cfg-jwt" style="min-height:40px" placeholder="Login หรือวาง token">eyJhbGciOiJIUzI1NiIsImtpZCI6Imt6dkUwOGZTRmlZd09tSjgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL21hZ251ZHN5cW15cXJ4aHFiY3l4LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJiNjQxNDc4My1mNmI5LTQ4ODctYjU1OS0wMzM0OWQ3MWI1ODciLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzcyNzQxMTE5LCJpYXQiOjE3NzI3Mzc1MTksImVtYWlsIjoiczI1MjI0QHN0cmVldHJhdC5hYy50aCIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJzMjUyMjRAc3RyZWV0cmF0LmFjLnRoIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBob25lX3ZlcmlmaWVkIjpmYWxzZSwic3ViIjoiYjY0MTQ3ODMtZjZiOS00ODg3LWI1NTktMDMzNDlkNzFiNTg3IiwidXNlcm5hbWUiOiIxMTExMTEifSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc3MjczNzUxOX1dLCJzZXNzaW9uX2lkIjoiNjUwYjczMGUtMjIxMy00YTYyLTlkYzMtMWY3OGRmZTUxOGVlIiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.N5YZa1tT2MPbuVD4c2K5q8tnKk6oZQq9H4W5FrqyF5U</textarea>
           </div>
 
           <div class="field">
@@ -167,7 +208,7 @@
 
           <div class="row2">
             <div class="field"><label>Total Msgs</label><input type="number" id="cfg-total" value="100" min="1" max="9999"></div>
-            <div class="field"><label>Concurrency</label><input type="number" id="cfg-concur" value="10" min="1" max="50"></div>
+            <div class="field"><label>Concurrency</label><input type="number" id="cfg-concur" value="10" min="1" max="100"></div>
           </div>
           <div class="row2">
             <div class="field"><label>Emojis/msg</label><input type="number" id="cfg-emoji" value="50" min="1" max="200"></div>
@@ -209,9 +250,11 @@ const EMOJIS = [
 const WORDS = ["hello","python","bot","test","spam","realtime","supabase","message","ping","pong","stress","flood","concurrent","async"];
 const SENTS = ["testing realtime latency","concurrent insert benchmark","stress test in progress","สวัสดี database","how fast can supabase go","insert insert insert"];
 
-// ── AUTH STATE ────────────────────────────────────────────
+// ── APP STATE ─────────────────────────────────────────────
+let useProxy = true;
 const auth = { accessToken:null, refreshToken:null, userId:null, expiresAt:null, timer:null };
 
+function getBackendUrl() { return document.getElementById('cfg-backend').value.trim().replace(/\/$/, ''); }
 function getBaseUrl() {
   const u = document.getElementById('cfg-url').value.trim();
   const m = u.match(/^(https:\/\/[^/]+)/);
@@ -219,9 +262,104 @@ function getBaseUrl() {
 }
 function getApiKey() { return document.getElementById('cfg-apikey').value.trim(); }
 
-// Refresh token อัตโนมัติ
+// ── PROXY PANEL ───────────────────────────────────────────
+let pxPollTimer = null;
+
+function setMode(m) {
+  useProxy = m === 'proxy';
+  document.getElementById('mode-proxy').classList.toggle('active', useProxy);
+  document.getElementById('mode-direct').classList.toggle('active', !useProxy);
+  log('info', useProxy ? '🌐 PROXY' : '⚡ DIRECT', null, useProxy ? 'using proxy rotator backend' : 'direct to supabase (no proxy)');
+}
+
+async function checkProxyStatus() {
+  const btn = document.getElementById('btn-px-check');
+  btn.disabled = true;
+  btn.textContent = '⏳ checking...';
+  try {
+    const r = await fetch(getBackendUrl() + '/status', { signal: AbortSignal.timeout(8000) });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+    updateProxyUI(d);
+    document.getElementById('btn-px-reload').disabled = false;
+
+    // auto poll if loading
+    if (d.loading?.state === 'testing' || d.loading?.state === 'fetching') {
+      if (!pxPollTimer) pxPollTimer = setInterval(pollProxyStatus, 2000);
+    } else {
+      if (pxPollTimer) { clearInterval(pxPollTimer); pxPollTimer = null; }
+    }
+  } catch(e) {
+    setPxInfo('err', `❌ ต่อ backend ไม่ได้: ${e.message}`);
+    document.getElementById('px-count').textContent = '?';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔍 CHECK STATUS';
+  }
+}
+
+async function pollProxyStatus() {
+  try {
+    const r = await fetch(getBackendUrl() + '/status', { signal: AbortSignal.timeout(5000) });
+    const d = await r.json();
+    updateProxyUI(d);
+    if (d.loading?.state === 'ready' || d.loading?.state === 'idle') {
+      clearInterval(pxPollTimer); pxPollTimer = null;
+    }
+  } catch(e) {}
+}
+
+function updateProxyUI(d) {
+  const count = d.pool_size || 0;
+  document.getElementById('px-count').textContent = count;
+  const pct = Math.min(100, (count / 40) * 100);
+  document.getElementById('px-bar').style.width = pct + '%';
+
+  const st = d.loading?.state || 'unknown';
+  const tested = d.loading?.tested || 0;
+  const total  = d.loading?.total  || 0;
+  const found  = d.loading?.found  || 0;
+
+  if (st === 'ready' || st === 'idle') {
+    const sample = (d.sample || []).slice(0,2).map(p => p.replace('http://','').split(':')[0]).join(', ');
+    setPxInfo('ok', `✅ ${count} proxies พร้อม${sample ? ' · ' + sample + '...' : ''}`);
+  } else if (st === 'testing') {
+    setPxInfo('loading', `<span class="spin">⏳</span> testing ${tested}/${total} · found ${found}...`);
+    if (!pxPollTimer) pxPollTimer = setInterval(pollProxyStatus, 2000);
+  } else if (st === 'fetching') {
+    setPxInfo('loading', `<span class="spin">🌐</span> fetching proxy lists...`);
+  } else {
+    setPxInfo('', `state: ${st}`);
+  }
+}
+
+function setPxInfo(cls, html) {
+  const el = document.getElementById('px-info');
+  el.className = `proxy-info ${cls}`;
+  el.innerHTML = html;
+}
+
+async function reloadProxies() {
+  const btn = document.getElementById('btn-px-reload');
+  btn.disabled = true;
+  try {
+    const r = await fetch(getBackendUrl() + '/reload', { method: 'POST', signal: AbortSignal.timeout(5000) });
+    const d = await r.json();
+    if (d.error) { setPxInfo('err', `❌ ${d.error}`); return; }
+    setPxInfo('loading', '<span class="spin">⏳</span> reloading...');
+    document.getElementById('px-count').textContent = '…';
+    if (!pxPollTimer) pxPollTimer = setInterval(pollProxyStatus, 2000);
+    log('proxy', '🔄 RELOAD', null, 'reloading proxy pool...');
+  } catch(e) {
+    setPxInfo('err', `❌ ${e.message}`);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ── AUTH ──────────────────────────────────────────────────
 async function doRefresh() {
-  log('warn','🔄 REFRESH', null, 'refresh token...');
+  log('warn','🔄 REFRESH', null, 'refreshing token...');
   try {
     const r = await fetch(`${getBaseUrl()}/auth/v1/token?grant_type=refresh_token`, {
       method: 'POST',
@@ -229,14 +367,11 @@ async function doRefresh() {
       body: JSON.stringify({ refresh_token: auth.refreshToken })
     });
     const d = await r.json();
-    if (!r.ok) { log('fail','🔄 FAIL', null, d.error_description || r.status); setAuthSt('err','⚠️ Refresh ล้มเหลว — login ใหม่'); return; }
-
+    if (!r.ok) { log('fail','🔄 FAIL', null, d.error_description || r.status); setAuthSt('err','⚠️ Refresh ล้มเหลว'); return; }
     applyTokens(d);
     log('info','✅ REFRESHED', null, `token ใหม่ · หมด ${fmtTime(auth.expiresAt)}`);
     setAuthSt('ok', `✅ Token สด · หมดอายุ ${fmtTime(auth.expiresAt)}`);
-  } catch(e) {
-    log('fail','🔄 ERR', null, e.message);
-  }
+  } catch(e) { log('fail','🔄 ERR', null, e.message); }
 }
 
 function applyTokens(d) {
@@ -245,34 +380,26 @@ function applyTokens(d) {
   auth.userId       = d.user?.id || d.user?.sub;
   const expiresIn   = d.expires_in || 3600;
   auth.expiresAt    = Date.now() + expiresIn * 1000;
-
   document.getElementById('cfg-jwt').value = d.access_token;
   if (auth.userId) document.getElementById('cfg-uid').value = auth.userId;
-
   updateBadge();
-  // ตั้ง timer refresh ก่อนหมดอายุ 60 วินาที
   if (auth.timer) clearTimeout(auth.timer);
   const delay = Math.max((expiresIn - 60) * 1000, 5000);
   auth.timer = setTimeout(doRefresh, delay);
 }
 
-// ถ้าได้ 401 ระหว่างรัน → refresh แล้ว retry
-async function fetchAR(url, opts) {
-  let r = await fetch(url, opts);
-  if (r.status === 401 && auth.refreshToken) {
+async function refreshIfNeeded() {
+  if (!auth.accessToken) return;
+  if (auth.expiresAt && Date.now() > auth.expiresAt - 30000 && auth.refreshToken) {
     await doRefresh();
-    opts.headers['Authorization'] = `Bearer ${auth.accessToken}`;
-    r = await fetch(url, opts);
   }
-  return r;
 }
 
 function updateBadge() {
   const b = document.getElementById('tok-badge');
   if (!auth.accessToken) { b.className='tok-badge nun'; b.textContent='NO TOKEN'; return; }
   if (Date.now() > auth.expiresAt) { b.className='tok-badge exp'; b.textContent='EXPIRED'; return; }
-  b.className='tok-badge ok';
-  b.textContent=`EXP ${fmtTime(auth.expiresAt)}`;
+  b.className='tok-badge ok'; b.textContent=`EXP ${fmtTime(auth.expiresAt)}`;
 }
 setInterval(updateBadge, 15000);
 
@@ -283,9 +410,17 @@ function setAuthSt(cls, msg) {
   el.textContent = msg;
 }
 
+async function useRefreshToken() {
+  const rt = document.getElementById('cfg-refresh').value.trim();
+  if (!rt) { alert('วาง refresh_token ก่อน'); return; }
+  auth.refreshToken = rt;
+  setAuthSt('inf', '⏳ กำลัง refresh...');
+  await doRefresh();
+}
+
 // ── LOG / STATS ───────────────────────────────────────────
 let running=false,stopFlag=false;
-let totalSent=0,totalOk=0,totalFail=0,totalMs=0,minMs=Infinity,maxMs=0,startTime=0;
+let totalSent=0,totalOk=0,totalFail=0,totalMs=0,startTime=0;
 
 function ts(){ return new Date().toTimeString().slice(0,8); }
 
@@ -293,11 +428,11 @@ function log(type, status, ms, content) {
   const el = document.getElementById('log');
   const d = document.createElement('div');
   d.className = `log-line log-${type}`;
-  d.innerHTML = `<span class="log-time">${ts()}</span><span class="log-status">${status}</span><span class="log-ms">${ms!==null?ms.toFixed(0)+'ms':'—'}</span><span class="log-content">${content}</span>`;
+  d.innerHTML = `<span class="log-time">${ts()}</span><span class="log-status">${status}</span><span class="log-ms">${ms!==null&&ms!==undefined?ms.toFixed(0)+'ms':'—'}</span><span class="log-content">${content}</span>`;
   el.appendChild(d);
+  if (el.children.length > 500) el.removeChild(el.firstChild);
   el.scrollTop = el.scrollHeight;
 }
-
 function clearLog(){ document.getElementById('log').innerHTML=''; }
 
 function updateStats(){
@@ -316,9 +451,8 @@ function setStatus(state, text){
   document.getElementById('status-text').textContent = text;
 }
 
-// ── SEND ─────────────────────────────────────────────────
+// ── REQUEST BUILDER ───────────────────────────────────────
 function pick(arr,k){ const r=[];for(let i=0;i<k;i++)r.push(arr[Math.floor(Math.random()*arr.length)]);return r; }
-
 function rndContent(n){
   const em = pick(EMOJIS,n).join('');
   const m  = Math.floor(Math.random()*3);
@@ -327,23 +461,36 @@ function rndContent(n){
   return `${pick(WORDS,3).join(' ')} ${em}`;
 }
 
-async function sendOne(idx, url, apikey, userId, emojiN, delay) {
+// Build the actual fetch URL depending on mode
+function buildFetchUrl(supabaseUrl) {
+  if (!useProxy) return supabaseUrl;
+  // Extract path after supabase base domain
+  const m = supabaseUrl.match(/https:\/\/[^/]+(\/.*)/);
+  const path = m ? m[1].replace(/^\//, '') : 'rest/v1/messages';
+  return `${getBackendUrl()}/proxy/${path}`;
+}
+
+async function sendOne(idx, supabaseUrl, apikey, userId, emojiN, delay) {
+  await refreshIfNeeded();
   const content = `[#${String(idx).padStart(3,'0')}] ${rndContent(emojiN)}`;
   const jwt = auth.accessToken || document.getElementById('cfg-jwt').value.trim();
+
+  const fetchUrl = buildFetchUrl(supabaseUrl);
   const opts = {
     method:'POST',
     headers:{ 'apikey':apikey, 'Authorization':`Bearer ${jwt}`, 'Content-Type':'application/json', 'Prefer':'return=representation' },
     body: JSON.stringify({ user_id:userId, content, reply_to:null })
   };
+
   const t0 = performance.now();
   try {
-    const r  = await fetchAR(url, opts);
+    const r  = await fetch(fetchUrl, opts);
     const ms = performance.now()-t0;
     const ok = r.status===200||r.status===201;
+    const via = r.headers.get('X-Proxy-Used') || (useProxy ? 'proxy' : 'direct');
     totalSent++; totalMs+=ms;
-    minMs=Math.min(minMs,ms); maxMs=Math.max(maxMs,ms);
-    if(ok){ totalOk++;   log('ok',  `✅ ${r.status}`, ms, content.slice(0,55)); }
-    else  { totalFail++; log('fail',`❌ ${r.status}`, ms, content.slice(0,55)); }
+    if(ok){ totalOk++;   log('ok',  `✅ ${r.status}`, ms, `[${via.split('.')[0]}] ${content.slice(0,40)}`); }
+    else  { totalFail++; log('fail',`❌ ${r.status}`, ms, `[${via.split('.')[0]}] ${content.slice(0,40)}`); }
   } catch(e){
     const ms = performance.now()-t0;
     totalSent++; totalFail++;
@@ -357,10 +504,10 @@ async function sendOne(idx, url, apikey, userId, emojiN, delay) {
 async function startTest(){
   if(running) return;
   const jwt = auth.accessToken||document.getElementById('cfg-jwt').value.trim();
-  if(!jwt){ alert('ยังไม่มี JWT Token! กรุณา login ก่อน หรือวาง token ในช่อง JWT'); return; }
+  if(!jwt){ alert('ยังไม่มี JWT Token!'); return; }
 
   running=true; stopFlag=false;
-  totalSent=0; totalOk=0; totalFail=0; totalMs=0; minMs=Infinity; maxMs=0;
+  totalSent=0; totalOk=0; totalFail=0; totalMs=0;
   startTime=Date.now();
 
   const url    = document.getElementById('cfg-url').value.trim();
@@ -375,7 +522,9 @@ async function startTest(){
   document.getElementById('btn-stop').classList.add('visible');
   document.getElementById('progress').style.width='0%';
   setStatus('running',`RUNNING — 0 / ${total}`);
-  log('info','🚀 START',null,`total=${total} concur=${concur} emoji=${emojiN} delay=${delay}ms`);
+
+  const mode = useProxy ? `🌐 proxy` : `⚡ direct`;
+  log('info','🚀 START',null,`total=${total} concur=${concur} emoji=${emojiN} delay=${delay}ms mode=${mode}`);
 
   let idx=0;
   async function worker(){
@@ -393,7 +542,7 @@ async function startTest(){
   const rps     = (totalSent/parseFloat(elapsed)).toFixed(1);
   const avg     = totalSent>0?(totalMs/totalSent).toFixed(0):0;
 
-  log('done','🏁 DONE',null,`${totalOk}ok ${totalFail}fail | ${elapsed}s | ${rps}rps | avg${avg}ms min${minMs.toFixed(0)}ms max${maxMs.toFixed(0)}ms`);
+  log('done','🏁 DONE',null,`${totalOk}ok ${totalFail}fail | ${elapsed}s | ${rps}rps | avg${avg}ms`);
   setStatus(totalFail===0?'done':'error',`DONE — ${totalOk}✅ ${totalFail}❌ | ${elapsed}s | ${rps} req/s`);
 
   document.getElementById('btn-start').disabled=false;
@@ -404,18 +553,8 @@ async function startTest(){
 
 function stopTest(){ stopFlag=true; setStatus('error','STOPPING...'); }
 
-// ── USE REFRESH TOKEN DIRECTLY ───────────────────────────
-async function useRefreshToken() {
-  const rt = document.getElementById('cfg-refresh').value.trim();
-  if (!rt) { alert('วาง refresh_token ก่อน'); return; }
-  auth.refreshToken = rt;
-  setAuthSt('inf', '⏳ กำลัง refresh...');
-  await doRefresh();
-}
-
-// auto-load turnstile on startup
+// ── STARTUP ───────────────────────────────────────────────
 window.addEventListener('load', () => {
-  // auto-apply tokens from prefilled fields
   const jwt = document.getElementById('cfg-jwt').value.trim();
   const rt  = document.getElementById('cfg-refresh').value.trim();
   if (jwt || rt) {
@@ -427,18 +566,22 @@ window.addEventListener('load', () => {
         const p = JSON.parse(atob(jwt.split('.')[1]));
         auth.expiresAt = p.exp * 1000;
         const secsLeft = p.exp - Math.floor(Date.now()/1000);
-        if (secsLeft > 60 && rt) scheduleRefresh(secsLeft);
-        else if (rt) setTimeout(doRefresh, 500); // expired, refresh right away
+        if (secsLeft <= 60 && rt) setTimeout(doRefresh, 500);
+        else if (rt) {
+          const delay = Math.max((secsLeft - 60) * 1000, 5000);
+          auth.timer = setTimeout(doRefresh, delay);
+        }
       } catch(e) {}
       updateBadge();
       setAuthSt('ok', `✅ Token พร้อม · หมดอายุ ${fmtTime(auth.expiresAt)}`);
     } else if (rt) {
-      setTimeout(doRefresh, 500); // only refresh token, get access token
+      setTimeout(doRefresh, 500);
     }
   }
+  // Auto-check proxy backend
+  setTimeout(checkProxyStatus, 800);
 });
 
-// sync manual jwt field
 document.getElementById('cfg-jwt').addEventListener('input',function(){
   auth.accessToken = this.value.trim()||null;
   updateBadge();
